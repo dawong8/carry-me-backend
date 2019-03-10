@@ -23,7 +23,7 @@ class User(UserMixin, Model):
 
 
 
-    # rating = IntegerField()
+    rating = IntegerField()
 
     class Meta:
         database = DATABASE
@@ -46,6 +46,7 @@ class User(UserMixin, Model):
         except cls.DoesNotExist:
             user = cls(username=username, email=email, description=description, apex=apex, apex_platform=apex_platform, overwatch=overwatch, overwatch_platform=overwatch_platform, fortnite=fortnite, fortnite_platform=fortnite_platform)
             user.password = generate_password_hash(password)
+            user.rating = 50
             user.save()
             return user
         else:

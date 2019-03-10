@@ -17,7 +17,8 @@ user_fields = {
     'overwatch': fields.String,
     'overwatch_platform': fields.String,
     'fortnite': fields.String,
-    'fortnite_platform': fields.String
+    'fortnite_platform': fields.String,
+    'rating': fields.Integer,
 
 }
 
@@ -97,15 +98,14 @@ class UserList(Resource):
         super().__init__()
 
         
-
+        # get all users that can be potential match
     def get(self):
-        users = [marshal(user, user_fields) for user in models.User.select()]
+        users = [marshal(user, user_fields) for user in models.User.select().where((models.User.email != "") or (models.User.overwatch != ""))]
         return {"users" : users}, 200
 
 
     # register
     def post(self): 
-        print('called?')
         args = self.reqparse.parse_args()
         user = models.User.create_user(**args)
         if user: 

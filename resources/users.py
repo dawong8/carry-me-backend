@@ -77,7 +77,7 @@ class UserList(Resource):
         super().__init__()
 
         
-        # get all users that can be potential match
+        # get all users 
     def get(self):
         users = [marshal(user, user_fields) for user in models.User.select().where((models.User.email != ""))]
         return {"users" : users}, 200
@@ -108,6 +108,13 @@ class User(Resource):
             location=['form', 'json']
             )
         super().__init__()
+
+
+    # get all users that isn't yourself
+    def get(self, id): 
+        users = [marshal(user, user_fields) for user in models.User.select().where((models.User.id != id))]
+        return users, 200
+
 
     @marshal_with(user_fields)
     def put(self, id):

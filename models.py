@@ -14,13 +14,9 @@ class User(UserMixin, Model):
     email = CharField(unique=True)
     password = CharField()
     description = TextField() # 				Playstyle, About section
-    apex = TextField()
-    apex_platform = TextField()
-    overwatch = TextField()
-    overwatch_platform = TextField()
     fortnite = TextField()
     fortnite_platform = TextField()
-
+    accountId = TextField()
 
 
     rating = IntegerField()
@@ -34,7 +30,7 @@ class User(UserMixin, Model):
             )
 
     @classmethod
-    def create_user(cls, username, email, password, description, apex, apex_platform, overwatch, overwatch_platform, fortnite, fortnite_platform):
+    def create_user(cls, username, email, password, description, fortnite, fortnite_platform, accountId):
         email = email.lower()
 
         try:
@@ -44,7 +40,7 @@ class User(UserMixin, Model):
             
             return False
         except cls.DoesNotExist:
-            user = cls(username=username, email=email, description=description, apex=apex, apex_platform=apex_platform, overwatch=overwatch, overwatch_platform=overwatch_platform, fortnite=fortnite, fortnite_platform=fortnite_platform)
+            user = cls(username=username, email=email, description=description, fortnite=fortnite, fortnite_platform=fortnite_platform, accountId=accountId)
             user.password = generate_password_hash(password)
             user.rating = 50
             user.save()

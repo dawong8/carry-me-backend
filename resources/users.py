@@ -12,13 +12,10 @@ user_fields = {
     'username' : fields.String,
     'email': fields.String,
     'description': fields.String,
-    'apex': fields.String, 
-    'apex_platform': fields.String,
-    'overwatch': fields.String,
-    'overwatch_platform': fields.String,
     'fortnite': fields.String,
     'fortnite_platform': fields.String,
     'rating': fields.Integer,
+    'accountId': fields.String,
 
 }
 
@@ -58,30 +55,6 @@ class UserList(Resource):
             location=['form', 'json']
             )
         self.reqparse.add_argument(
-            'apex',
-            required=True,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
-            'apex_platform',
-            required=True,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
-            'overwatch',
-            required=True,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
-            'overwatch_platform',
-            required=True,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
             'fortnite',
             required=True,
             help='description entered?',
@@ -93,6 +66,12 @@ class UserList(Resource):
             help='description entered?',
             location=['form', 'json']
             )
+        self.reqparse.add_argument(
+            'accountId',
+            required=True,
+            help='missing accountId',
+            location=['form', 'json']
+            )
 
 
         super().__init__()
@@ -100,7 +79,7 @@ class UserList(Resource):
         
         # get all users that can be potential match
     def get(self):
-        users = [marshal(user, user_fields) for user in models.User.select().where((models.User.email != "") or (models.User.overwatch != ""))]
+        users = [marshal(user, user_fields) for user in models.User.select().where((models.User.email != ""))]
         return {"users" : users}, 200
 
 
@@ -116,30 +95,6 @@ class UserList(Resource):
 class User(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument(
-            'apex',
-            required=False,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
-            'apex_platform',
-            required=False,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
-            'overwatch',
-            required=False,
-            help='description entered?',
-            location=['form', 'json']
-            )
-        self.reqparse.add_argument(
-            'overwatch_platform',
-            required=False,
-            help='description entered?',
-            location=['form', 'json']
-            )
         self.reqparse.add_argument(
             'fortnite',
             required=False,

@@ -22,7 +22,8 @@ user_fields = {
 relationship_fields = {
     'owner_id': fields.String,
     'other_person': fields.String,
-    'like': fields.Boolean
+    'like': fields.Boolean, 
+    'chatroom_id': fields.String,
 }
 
 def user_or_404(id):
@@ -160,6 +161,12 @@ class RelationshipList(Resource):
         super().__init__()
 
 
+    def get(self): 
+        # gets all relationships in database 
+        relationships = [marshal(relationship, relationship_fields) for relationship in models.Relationship.select()]
+        return relationships
+
+
         # create new relationship
     def post(self):
         args = self.reqparse.parse_args()
@@ -207,11 +214,14 @@ class Relationship(Resource):
     def post(self, id): 
         args = self.reqparse.parse_args()
         try: 
-            user = models.Relationship.select().where((models.Relationship.owner_id == args["other_person"]) and (models.Relationship.other_person == id) and (models.Relationship.like == True) )
+
+        # first = [marshal(item, relationship_fields)  for item in models.Relationship.select().where((models.Relationship.owner_id == args["other_person"]))]
+        # second = [marshal(item, relationship_fields)  for item in first.select().where((models.Relationship.other_person == id))]
+            user = models.Relationship.get( (models.Relationship.like == args["like"]) and (models.Relationship.owner_id == args["other_person"]) and (models.Relationship.other_person == id) )
         except models.DoesNotExist:
             return "Not Found"
         else: 
-            return "Found"
+            return marshal(user, relationship_fields)
 
 class Login(Resource): 
     def __init__(self):

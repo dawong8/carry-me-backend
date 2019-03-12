@@ -19,6 +19,12 @@ user_fields = {
 
 }
 
+relationship_fields = {
+    'owner_id': fields.String,
+    'other_person': fields.String,
+    'like': fields.Boolean
+}
+
 def user_or_404(id):
     try:
         user = models.User.get(models.User.id == id)
@@ -124,11 +130,76 @@ class User(Resource):
         return (models.User.get(models.User.id==id), 200)
 
 
+class RelationshipList(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+        'owner_id',
+        required=True,
+        help='no ownerid entered?',
+        location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+        'other_person',
+        required=True,
+        help='other person entered?',
+        location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+        'like',
+        required=True,
+        help='like not entered?',
+        location=['form', 'json']
+        )
+        super().__init__()
+
+
+        # create new relationship
+    def post(self):
+        args = self.reqparse.parse_args()
+        relationship = models.Relationship.create_relationship(**args)
+        return marshal(relationship, relationship_fields) # returns the newly created relation
 
 
 
-    # edit profile, complete profile,
 
+class Relationship(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+        'owner_id',
+        required=False,
+        help='no ownerid entered?',
+        location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+        'other_person',
+        required=False,
+        help='other person entered?',
+        location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+        'like',
+        required=False,
+        help='like not entered?',
+        location=['form', 'json']
+        )
+        super().__init__()
+
+    def get(self, id):
+        # args = self.reqparse.parse_args()
+        relationships = [marshal(relationship, relationship_fields) for relationship in models.Relationship.select().where((models.Relationship.owner_id == id))]
+        return relationships
+        # get back all the relationships for this id 
+
+    def post(self, id): 
+        args = self.reqparse.parse_args()
+        try: 
+            user = models.Relationship.select().where((models.Relationship.owner_id == args["other_person"]) and (models.Relationship.other_person == id) and (models.Relationship.like == True) )
+        except models.DoesNotExist:
+            return "Not Found"
+        else: 
+            return "Found"
 
 class Login(Resource): 
     def __init__(self):
@@ -187,5 +258,15 @@ api.add_resource(
     Login,
     '/users/login',
     endpoint='login'
+)
+api.add_resource(
+    Relationship,
+    '/users/relationship/<int:id>',
+    endpoint='getrelations'
+)
+api.add_resource(
+    RelationshipList,
+    '/users/relationship',
+    endpoint='createrelations'
 )
 

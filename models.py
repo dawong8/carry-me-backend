@@ -49,6 +49,21 @@ class User(UserMixin, Model):
             return user
 
 
+class Relationship(Model):
+	owner_id = TextField() #ForeignKeyField(model=User, related_name='relationship_set', backref='relationship', null=True)
+	other_person = TextField()
+	like = BooleanField() # true = like, false = pass
+
+
+	class Meta: 
+		database = DATABASE
+
+	@classmethod
+	def create_relationship(cls, owner_id, other_person, like):
+		relation = cls(owner_id=owner_id, other_person=other_person, like=like)
+		relation.save()
+		return relation
+
 
 
 class Review(Model):	
@@ -78,5 +93,5 @@ class Review(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Review], safe=True)
+    DATABASE.create_tables([User, Relationship, Review], safe=True)
     DATABASE.close()

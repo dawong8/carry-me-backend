@@ -151,6 +151,12 @@ class RelationshipList(Resource):
         help='like not entered?',
         location=['form', 'json']
         )
+        self.reqparse.add_argument(
+        'chatroom_id',
+        required=True,
+        help='chatroom not entered?',
+        location=['form', 'json']
+        )
         super().__init__()
 
 
@@ -182,6 +188,12 @@ class Relationship(Resource):
         'like',
         required=False,
         help='like not entered?',
+        location=['form', 'json']
+        )
+        self.reqparse.add_argument(
+        'chatroom_id',
+        required=True,
+        help='chatroom not entered?',
         location=['form', 'json']
         )
         super().__init__()

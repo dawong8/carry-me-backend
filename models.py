@@ -50,19 +50,19 @@ class User(UserMixin, Model):
 
 
 class Relationship(Model):
-	owner_id = TextField() #ForeignKeyField(model=User, related_name='relationship_set', backref='relationship', null=True)
-	other_person = TextField()
-	like = BooleanField() # true = like, false = pass
+    owner_id = TextField() #ForeignKeyField(model=User, related_name='relationship_set', backref='relationship', null=True)
+    other_person = TextField()
+    like = BooleanField() # true = like, false = pass
+    chatroom_id = TextField()
+    
+    class Meta: 
+    	database = DATABASE
 
-
-	class Meta: 
-		database = DATABASE
-
-	@classmethod
-	def create_relationship(cls, owner_id, other_person, like):
-		relation = cls(owner_id=owner_id, other_person=other_person, like=like)
-		relation.save()
-		return relation
+    @classmethod
+    def create_relationship(cls, owner_id, other_person, like, chatroom_id):
+    	relation = cls(owner_id=owner_id, other_person=other_person, like=like, chatroom_id=chatroom_id)
+    	relation.save()
+    	return relation
 
 
 

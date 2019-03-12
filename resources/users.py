@@ -221,7 +221,7 @@ class Relationship(Resource):
         except models.DoesNotExist:
             return "Not Found"
         else: 
-            return marshal(user, relationship_fields)
+            return "Found" #marshal(user, relationship_fields)
 
 class Login(Resource): 
     def __init__(self):

@@ -54,6 +54,14 @@ class Fortnite(Resource):
 
 		super().__init__()
 
+	def get(self): # get fortnite daily/weekly items 
+		params = {
+			'TRN-Api-Key':'6e8ca0c1-3a89-4ff5-bd11-31f604949ae2'
+			}
+		r = requests.get('https://api.fortnitetracker.com/v1/store',headers=params)
+		return r.json()
+
+
 	def post(self): 
 		args = self.reqparse.parse_args()
 		params = {

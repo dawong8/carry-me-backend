@@ -83,7 +83,7 @@ class Chatroom(Model):
     def create_chatroom(cls, chatroom_id, message, sender, receiver):
         chat = cls(chatroom_id=chatroom_id, message=message, sender=sender, receiver=receiver)
         chat.save()
-        return save
+        return chat
 
 
 class Review(Model):	

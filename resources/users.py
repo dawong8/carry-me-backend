@@ -351,7 +351,7 @@ api.add_resource(
 
 api.add_resource(
     Chatroom,
-    '/users/chat/<int:id>',
+    '/users/chat/<string:id>',
     endpoint='chatroom'
 )
 

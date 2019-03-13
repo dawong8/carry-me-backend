@@ -54,7 +54,7 @@ class Relationship(Model):
     other_person = TextField()
     like = BooleanField() # true = like, false = pass
     chatroom_id = TextField()
-    
+
     class Meta: 
     	database = DATABASE
 
@@ -64,6 +64,26 @@ class Relationship(Model):
     	relation.save()
     	return relation
 
+
+
+class Chatroom(Model): 
+    chatroom_id = TextField()
+    message = TextField()
+    sender = TextField() # id 
+    receiver = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+
+    class Meta: 
+        database = DATABASE
+        order_By = ('-created_at')
+
+
+    @classmethod
+    def create_chatroom(cls, chatroom_id, message, sender, receiver):
+        chat = cls(chatroom_id=chatroom_id, message=message, sender=sender, receiver=receiver)
+        chat.save()
+        return save
 
 
 class Review(Model):	
@@ -93,5 +113,5 @@ class Review(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Relationship, Review], safe=True)
+    DATABASE.create_tables([User, Relationship, Chatroom, Review], safe=True)
     DATABASE.close()

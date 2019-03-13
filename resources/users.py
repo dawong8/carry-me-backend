@@ -26,6 +26,14 @@ relationship_fields = {
     'chatroom_id': fields.String,
 }
 
+chatroom_fields = {
+    'chatroom_id': fields.String, 
+    'message': fields.String,
+    'sender': fields.String, 
+    'receiver': fields.String
+
+}
+
 def user_or_404(id):
     try:
         user = models.User.get(models.User.id == id)
@@ -263,6 +271,54 @@ class Login(Resource):
         return "Logout Successful", 200
 
 
+class Chatroom(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            'chatroom_id',
+            required = True,
+            help = 'no username entered',
+            location = ['form', 'json']
+        )
+        self.reqparse.add_argument(
+            'message',
+            required = True,
+            help = 'no password entered',
+            location = ['form', 'json']
+        )
+        self.reqparse.add_argument(
+            'sender',
+            required = True,
+            help = 'no password entered',
+            location = ['form', 'json']
+        )
+        self.reqparse.add_argument(
+            'receiver',
+            required = True,
+            help = 'no password entered',
+            location = ['form', 'json']
+        )
+
+
+        super().__init__()
+
+
+        # id is chatroom_id 
+    def get(self, id):
+        messages = [marshal(msg, chatroom_fields) for msg in models.Chatroom.select().where((models.Chatroom.chatroom_id == id))]
+        return messages
+
+    def post(self, id):
+        args = self.reqparse.parse_args()
+        message = models.Chatroom.create_chatroom(**args)
+        return marshal(message, chatroom_fields) # returns the newly created relation
+
+
+
+
+
+
+
 users_api = Blueprint('resources.users', __name__)
 api = Api(users_api)
 
@@ -290,5 +346,12 @@ api.add_resource(
     RelationshipList,
     '/users/relationship',
     endpoint='createrelations'
+)
+
+
+api.add_resource(
+    Chatroom,
+    '/users/chat/<int:id>',
+    endpoint='chatroom'
 )
 
